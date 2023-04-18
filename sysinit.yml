@@ -14,6 +14,8 @@
           - wget
           - zsh
           - tmux
+          - net-tools
+          - libssl-dev
         state: latest
 
     - name: Change default shell
@@ -26,6 +28,7 @@
       ansible.builtin.git:
         repo: https://github.com/gpakosz/.tmux.git
         dest: $HOME/.tmux
+        update: yes
 
     - name: Create symbolic link to .tmux/.tmux.conf
       ansible.builtin.file:
@@ -53,11 +56,13 @@
       ansible.builtin.git:
         repo: https://github.com/zsh-users/zsh-autosuggestions.git
         dest: $HOME/.oh-my-zsh/plugins/zsh-autosuggestions
+        update: yes
 
     - name: Clone zhs-syntax-highlighting.git
       ansible.builtin.git:
         repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
         dest: $HOME/.oh-my-zsh/plugins/zsh-syntax-highlighting
+        update: yes
 
     - name: 'Modify .zshrc file to enable zsh-autosuggestions an zsh-syntax-highlighting'
       ansible.builtin.lineinfile:
@@ -77,3 +82,58 @@
         group: '{{ the_user }}'
         mode: 0644
 
+    - name: Add lne to .zshrc to source aliases
+      ansible.builtin.lineinfile:
+        path: $HOME/.zshrc
+        line: '[[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"'
+        create: yes
+
+    - name: Add lne to .zshrc to source zsh functions
+      ansible.builtin.lineinfile:
+        path: $HOME/.zshrc
+        line: '[[ -f "$HOME/.zsh_functions" ]] && source "$HOME/.zsh_functions"'
+        create: yes
+
+    - name: Copy aliases file
+      ansible.builtin.copy:
+        src: 'files/aliases'
+        dest: $HOME/.aliases
+        owner: '{{ the_user }}'
+        group: '{{ the_user }}'
+        mode: 0744
+
+    - name: Copy zsh_functions file
+      ansible.builtin.copy:
+        src: 'files/zsh_functions'
+        dest: $HOME/.zsh_functions
+        owner: '{{ the_user }}'
+        group: '{{ the_user }}'
+        mode: 0744
+
+    - name: Git clone rbenv
+      ansible.builtin.git:
+        repo: https://github.com/rbenv/rbenv.git
+        dest: $HOME/.rbenv
+        update: yes
+
+    - name: Git clone rbenv build
+      ansible.builtin.git:
+        repo: https://github.com/rbenv/ruby-build.git
+        dest: $HOME/.rbenv/plugins/ruby-build
+        update: yes
+
+    - name: Add line to .zshrc to enable rbenv
+      ansible.builtin.lineinfile:
+        path: $HOME/.zshrc
+        line: 'eval "$($HOME/.rbenv/bin/rbenv init - zsh)"'
+        create: yes
+
+    - name: Add lne to .zshrc enable vi navigation in zsh
+      ansible.builtin.lineinfile:
+        path: $HOME/.zshrc
+        line: "bindkey -v"
+        create: yes
+
+    - name: Install nvm
+      ansible.builtin.shell:
+        " curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash"
