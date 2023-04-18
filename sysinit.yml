@@ -1,0 +1,79 @@
+---
+- name: Set up workstation
+  hosts: nodes
+  vars:
+    the_user: "ansible"
+  tasks:
+    - name: Install base packages (apt)
+      become: yes
+      ansible.builtin.apt:
+        name:
+          - vim
+          - git
+          - curl
+          - wget
+          - zsh
+          - tmux
+        state: latest
+
+    - name: Change default shell
+      become: yes
+      user:
+        name: "{{ the_user }}"
+        shell: /bin/zsh
+
+    - name: Clone oh-my-tmux
+      ansible.builtin.git:
+        repo: https://github.com/gpakosz/.tmux.git
+        dest: $HOME/.tmux
+
+    - name: Create symbolic link to .tmux/.tmux.conf
+      ansible.builtin.file:
+        src: $HOME/.tmux/.tmux.conf
+        dest: $HOME/.tmux.conf
+        owner: "{{ the_user }}"
+        group: "{{ the_user }}"
+        state: link
+
+    - name: Create symbolic link to .tmux/.tmux.conf.local
+      ansible.builtin.file:
+        src: $HOME/.tmux/.tmux.conf.local
+        dest: $HOME/.tmux.conf.local
+        owner: "{{ the_user }}"
+        group: "{{ the_user }}"
+        state: link
+
+#    TODO: This tasks gets stuck. Possibly because the script requires an answer
+#    to a prompt
+#
+#    - name: install oh-my-zsh
+#      ansible.builtin.shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+    - name: Clone zsh-autosuggestions.git
+      ansible.builtin.git:
+        repo: https://github.com/zsh-users/zsh-autosuggestions.git
+        dest: $HOME/.oh-my-zsh/plugins/zsh-autosuggestions
+
+    - name: Clone zhs-syntax-highlighting.git
+      ansible.builtin.git:
+        repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+        dest: $HOME/.oh-my-zsh/plugins/zsh-syntax-highlighting
+
+    - name: 'Modify .zshrc file to enable zsh-autosuggestions an zsh-syntax-highlighting'
+      ansible.builtin.lineinfile:
+        path: $HOME/.zshrc
+        regex: '^plugins=\(git\)'
+        line: 'plugins=(git zsh-autosuggestions zsh-syntax-highlighting)'
+        owner: '{{ the_user }}'
+        group: '{{ the_user }}'
+        mode: 0644
+
+    - name: 'Modify .zshrc file to change theme from "robbyrussel" to "agnoster"'
+      ansible.builtin.lineinfile:
+        path: $HOME/.zshrc
+        regex: '^ZSH_THEME="robbyrussell'
+        line: 'ZSH_THEME="agnoster"'
+        owner: '{{ the_user }}'
+        group: '{{ the_user }}'
+        mode: 0644
+
