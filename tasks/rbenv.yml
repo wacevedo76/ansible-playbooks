@@ -1,0 +1,18 @@
+---
+- name: Git clone rbenv
+  ansible.builtin.git:
+    repo: https://github.com/rbenv/rbenv.git
+    dest: $HOME/.rbenv
+    update: yes
+
+- name: Git clone rbenv build
+  ansible.builtin.git:
+    repo: https://github.com/rbenv/ruby-build.git
+    dest: $HOME/.rbenv/plugins/ruby-build
+    update: yes
+
+- name: Add line to .zshrc to enable rbenv
+  ansible.builtin.lineinfile:
+    path: $HOME/.zshrc
+    line: 'eval "$($HOME/.rbenv/bin/rbenv init - zsh)"'
+    create: yes

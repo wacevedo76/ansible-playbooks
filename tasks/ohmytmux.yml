@@ -1,0 +1,22 @@
+---
+- name: Clone oh-my-tmux
+  ansible.builtin.git:
+    repo: https://github.com/gpakosz/.tmux.git
+    dest: $HOME/.tmux
+    update: yes
+
+- name: Create symbolic link to .tmux/.tmux.conf
+  ansible.builtin.file:
+    src: $HOME/.tmux/.tmux.conf
+    dest: $HOME/.tmux.conf
+    owner: "{{ the_user }}"
+    group: "{{ the_user }}"
+    state: link
+
+- name: Create symbolic link to .tmux/.tmux.conf.local
+  ansible.builtin.file:
+    src: $HOME/.tmux/.tmux.conf.local
+    dest: $HOME/.tmux.conf.local
+    owner: "{{ the_user }}"
+    group: "{{ the_user }}"
+    state: link

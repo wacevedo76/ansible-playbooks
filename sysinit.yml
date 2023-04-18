@@ -1,22 +1,14 @@
 ---
+# This playbook is used to install tools and packages I use in development
+
 - name: Set up workstation
   hosts: nodes
   vars:
     the_user: "ansible"
   tasks:
-    - name: Install base packages (apt)
-      become: yes
-      ansible.builtin.apt:
-        name:
-          - vim
-          - git
-          - curl
-          - wget
-          - zsh
-          - tmux
-          - net-tools
-          - libssl-dev
-        state: latest
+    - name: Install base packages
+      ansible.builtin.include_tasks:
+        file: 'tasks/basepackages.yml'
 
     - name: Change default shell
       become: yes
@@ -24,109 +16,26 @@
         name: "{{ the_user }}"
         shell: /bin/zsh
 
-    - name: Clone oh-my-tmux
-      ansible.builtin.git:
-        repo: https://github.com/gpakosz/.tmux.git
-        dest: $HOME/.tmux
-        update: yes
+    # TODO: the first task freezes or throws an error
+    - name: 'Install oh-my-zsh'
+      ansible.builtin.include_tasks:
+        file: 'tasks/ohmyzsh.yml'
 
-    - name: Create symbolic link to .tmux/.tmux.conf
-      ansible.builtin.file:
-        src: $HOME/.tmux/.tmux.conf
-        dest: $HOME/.tmux.conf
-        owner: "{{ the_user }}"
-        group: "{{ the_user }}"
-        state: link
+    - name: 'Install oh-my-tmux'
+      ansible.builtin.include_tasks:
+        file: 'tasks/ohmytmux.yml'
 
-    - name: Create symbolic link to .tmux/.tmux.conf.local
-      ansible.builtin.file:
-        src: $HOME/.tmux/.tmux.conf.local
-        dest: $HOME/.tmux.conf.local
-        owner: "{{ the_user }}"
-        group: "{{ the_user }}"
-        state: link
+    - name: 'Install .aliases and .zsh_functions'
+      ansible.builtin.include_tasks:
+        file: 'tasks/addfiles.yml'
 
-#    TODO: This tasks gets stuck. Possibly because the script requires an answer
-#    to a prompt
-#
-#    - name: install oh-my-zsh
-#      ansible.builtin.shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    - name: 'Install rbenv'
+      ansible.builtin.include_tasks:
+        file: 'tasks/rbenv.yml'
 
-    - name: Clone zsh-autosuggestions.git
-      ansible.builtin.git:
-        repo: https://github.com/zsh-users/zsh-autosuggestions.git
-        dest: $HOME/.oh-my-zsh/plugins/zsh-autosuggestions
-        update: yes
-
-    - name: Clone zhs-syntax-highlighting.git
-      ansible.builtin.git:
-        repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
-        dest: $HOME/.oh-my-zsh/plugins/zsh-syntax-highlighting
-        update: yes
-
-    - name: 'Modify .zshrc file to enable zsh-autosuggestions an zsh-syntax-highlighting'
-      ansible.builtin.lineinfile:
-        path: $HOME/.zshrc
-        regex: '^plugins=\(git\)'
-        line: 'plugins=(git zsh-autosuggestions zsh-syntax-highlighting)'
-        owner: '{{ the_user }}'
-        group: '{{ the_user }}'
-        mode: 0644
-
-    - name: 'Modify .zshrc file to change theme from "robbyrussel" to "agnoster"'
-      ansible.builtin.lineinfile:
-        path: $HOME/.zshrc
-        regex: '^ZSH_THEME="robbyrussell'
-        line: 'ZSH_THEME="agnoster"'
-        owner: '{{ the_user }}'
-        group: '{{ the_user }}'
-        mode: 0644
-
-    - name: Add lne to .zshrc to source aliases
-      ansible.builtin.lineinfile:
-        path: $HOME/.zshrc
-        line: '[[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"'
-        create: yes
-
-    - name: Add lne to .zshrc to source zsh functions
-      ansible.builtin.lineinfile:
-        path: $HOME/.zshrc
-        line: '[[ -f "$HOME/.zsh_functions" ]] && source "$HOME/.zsh_functions"'
-        create: yes
-
-    - name: Copy aliases file
-      ansible.builtin.copy:
-        src: 'files/aliases'
-        dest: $HOME/.aliases
-        owner: '{{ the_user }}'
-        group: '{{ the_user }}'
-        mode: 0744
-
-    - name: Copy zsh_functions file
-      ansible.builtin.copy:
-        src: 'files/zsh_functions'
-        dest: $HOME/.zsh_functions
-        owner: '{{ the_user }}'
-        group: '{{ the_user }}'
-        mode: 0744
-
-    - name: Git clone rbenv
-      ansible.builtin.git:
-        repo: https://github.com/rbenv/rbenv.git
-        dest: $HOME/.rbenv
-        update: yes
-
-    - name: Git clone rbenv build
-      ansible.builtin.git:
-        repo: https://github.com/rbenv/ruby-build.git
-        dest: $HOME/.rbenv/plugins/ruby-build
-        update: yes
-
-    - name: Add line to .zshrc to enable rbenv
-      ansible.builtin.lineinfile:
-        path: $HOME/.zshrc
-        line: 'eval "$($HOME/.rbenv/bin/rbenv init - zsh)"'
-        create: yes
+    - name: 'Install nvm'
+      ansible.builtin.include_tasks:
+        file: 'tasks/nvm.yml'
 
     - name: Add lne to .zshrc enable vi navigation in zsh
       ansible.builtin.lineinfile:
@@ -134,6 +43,3 @@
         line: "bindkey -v"
         create: yes
 
-    - name: Install nvm
-      ansible.builtin.shell:
-        " curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash"

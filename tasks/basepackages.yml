@@ -1,0 +1,14 @@
+---
+- name: Install base packages (apt)
+  become: yes
+  ansible.builtin.apt:
+    name:
+      - vim
+      - git
+      - curl
+      - wget
+      - zsh
+      - tmux
+      - net-tools
+      - libssl-dev
+    state: latest
