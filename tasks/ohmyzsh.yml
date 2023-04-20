@@ -1,7 +1,8 @@
 ---
 - name: install oh-my-zsh
   ansible.builtin.shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-  creates: $HOME/.zshrc
+  args:
+    creates: $HOME/.zshrc
 
 - name: Clone zsh-autosuggestions.git
   ansible.builtin.git:
