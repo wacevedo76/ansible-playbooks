@@ -16,6 +16,12 @@
         name: "{{ the_user }}"
         shell: /bin/zsh
 
+    - name: "Create code/repos directory"
+      ansible.builtin.file:
+        path: $HOME/code/repos
+        state: directory
+        mode: 0755
+
     # TODO: the first task freezes or throws an error
     - name: 'Install oh-my-zsh'
       ansible.builtin.include_tasks:
@@ -43,3 +49,6 @@
         line: "bindkey -v"
         create: yes
 
+    - name: Install Neovim
+      ansible.builtin.include_tasks:
+        file: 'tasks/neovim.yml'

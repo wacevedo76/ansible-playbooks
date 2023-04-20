@@ -1,0 +1,6 @@
+---
+- name: Clone zsh-autosuggestions.git
+  ansible.builtin.git:
+    repo: https://github.com/neovim/neovim.git
+    dest: $HOME/code/repos
+    update: yes
