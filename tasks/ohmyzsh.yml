@@ -1,8 +1,6 @@
 ---
-# TODO: This tasks gets stuck. Possibly because the script requires an answer
-# to a prompt
-# - name: install oh-my-zsh
-#   ansible.builtin.shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+- name: install oh-my-zsh
+  ansible.builtin.shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
 - name: Clone zsh-autosuggestions.git
   ansible.builtin.git:
