@@ -29,3 +29,10 @@
   args:
     chdir: /home/{{ the_user }}/code/repos/neovim
     creates: /usr/local/bin/nvim
+
+- name: Install neovim Packer
+  ansible.builtin.git:
+    repo: https://github.com/wbthomason/packer.nvim
+    dest: /home/{{ the_user }}/.local/share/nvim/site/pack/packer/start/packer.nvim
+  args:
+    depth: 1
