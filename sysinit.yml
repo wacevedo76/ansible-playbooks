@@ -22,7 +22,6 @@
         state: directory
         mode: 0755
 
-    # TODO: the first task freezes or throws an error
     - name: 'Install oh-my-zsh'
       ansible.builtin.include_tasks:
         file: 'tasks/ohmyzsh.yml'
@@ -52,3 +51,7 @@
     - name: Install Neovim
       ansible.builtin.include_tasks:
         file: 'tasks/neovim.yml'
+
+    - name: Installs additional tools
+      ansible.builtin.include_tasks:
+        file: 'tasks/additionaltools.yml'

@@ -1,0 +1,7 @@
+---
+- name: Install pip tools
+  ansible.builtin.pip:
+    name:
+      - tldr
+      - yt-dlp
+    extra_args: --user
