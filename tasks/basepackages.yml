@@ -12,3 +12,9 @@
       - net-tools
       - libssl-dev
     state: latest
+
+- name: "Create user .config directory"
+  ansible.builtin.file:
+    path: /home/{{ the_user }}/.config
+    state: directory
+    mode: 0755
