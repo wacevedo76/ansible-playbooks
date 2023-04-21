@@ -1,6 +1,29 @@
 ---
-- name: Clone zsh-autosuggestions.git
+- name: Install Neovim Dependencies
+  become: yes
+  ansible.builtin.apt:
+    name:
+      - ninja-build
+      - gettext
+      - cmake
+      - unzip
+      - curl
+    state: latest
+
+- name: Clone neovim
   ansible.builtin.git:
     repo: https://github.com/neovim/neovim.git
-    dest: $HOME/code/repos
+    dest: /home/{{ the_user }}/code/repos/neovim
+    force: yes
     update: yes
+
+- name: Change working directory to neovim and run build
+  ansible.builtin.command: make CMAKE_BUILD_TYPE=RelWithDebInfo
+  args:
+    chdir: /home/{{ the_user }}/code/repos/neovim
+
+- name: Change working directory to neovim and run build
+  become: true
+  ansible.builtin.command: make install
+  args:
+    chdir: /home/{{ the_user }}/code/repos/neovim

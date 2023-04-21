@@ -18,7 +18,7 @@
 
     - name: "Create code/repos directory"
       ansible.builtin.file:
-        path: $HOME/code/repos
+        path: /home/{{ the_user }}/code/repos
         state: directory
         mode: 0755
 
@@ -45,7 +45,7 @@
 
     - name: Add lne to .zshrc enable vi navigation in zsh
       ansible.builtin.lineinfile:
-        path: $HOME/.zshrc
+        path: /home/{{ the_user }}/.zshrc
         line: "bindkey -v"
         create: yes
 

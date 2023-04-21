@@ -1,20 +1,20 @@
 ---
 - name: Add lne to .zshrc to source aliases
   ansible.builtin.lineinfile:
-    path: $HOME/.zshrc
-    line: '[[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"'
+    path: /home/{{ the_user }}/.zshrc
+    line: '[[ -f "/home/{{ the_user }}/.aliases" ]] && source "/home/{{ the_user }}/.aliases"'
     create: yes
 
 - name: Add lne to .zshrc to source zsh functions
   ansible.builtin.lineinfile:
-    path: $HOME/.zshrc
-    line: '[[ -f "$HOME/.zsh_functions" ]] && source "$HOME/.zsh_functions"'
+    path: /home/{{ the_user }}/.zshrc
+    line: '[[ -f "/home/{{ the_user }}/.zsh_functions" ]] && source "/home/{{ the_user }}/.zsh_functions"'
     create: yes
 
 - name: Copy aliases file
   ansible.builtin.copy:
     src: 'files/aliases'
-    dest: $HOME/.aliases
+    dest: /home/{{ the_user }}/.aliases
     owner: '{{ the_user }}'
     group: '{{ the_user }}'
     mode: 0744
@@ -22,7 +22,7 @@
 - name: Copy zsh_functions file
   ansible.builtin.copy:
     src: 'files/zsh_functions'
-    dest: $HOME/.zsh_functions
+    dest: /home/{{ the_user }}/.zsh_functions
     owner: '{{ the_user }}'
     group: '{{ the_user }}'
     mode: 0744

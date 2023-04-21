@@ -2,23 +2,23 @@
 - name: install oh-my-zsh
   ansible.builtin.shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
   args:
-    creates: $HOME/.zshrc
+    creates: /home/{{ the_user }}/.zshrc
 
 - name: Clone zsh-autosuggestions.git
   ansible.builtin.git:
     repo: https://github.com/zsh-users/zsh-autosuggestions.git
-    dest: $HOME/.oh-my-zsh/plugins/zsh-autosuggestions
+    dest: /home/{{ the_user }}/.oh-my-zsh/plugins/zsh-autosuggestions
     update: yes
 
 - name: Clone zhs-syntax-highlighting.git
   ansible.builtin.git:
     repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
-    dest: $HOME/.oh-my-zsh/plugins/zsh-syntax-highlighting
+    dest: /home/{{ the_user }}/.oh-my-zsh/plugins/zsh-syntax-highlighting
     update: yes
 
 - name: 'Modify .zshrc file to enable zsh-autosuggestions an zsh-syntax-highlighting'
   ansible.builtin.lineinfile:
-    path: $HOME/.zshrc
+    path: /home/{{ the_user }}/.zshrc
     regex: '^plugins=\(git\)'
     line: 'plugins=(git zsh-autosuggestions zsh-syntax-highlighting)'
     owner: '{{ the_user }}'
@@ -27,7 +27,7 @@
 
 - name: 'Modify .zshrc file to change theme from "robbyrussel" to "agnoster"'
   ansible.builtin.lineinfile:
-    path: $HOME/.zshrc
+    path: /home/{{ the_user }}/.zshrc
     regex: '^ZSH_THEME="robbyrussell'
     line: 'ZSH_THEME="agnoster"'
     owner: '{{ the_user }}'
