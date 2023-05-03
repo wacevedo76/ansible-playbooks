@@ -4,54 +4,53 @@
 - name: Set up workstation
   hosts: nodes
   vars:
-    the_user: "ansible"
+    user: 'ansible'
+
   tasks:
     - name: Install base packages
       ansible.builtin.include_tasks:
         file: 'tasks/basepackages.yml'
+      tags: 'base'
 
-    - name: Change default shell
-      become: yes
-      user:
-        name: "{{ the_user }}"
-        shell: /bin/zsh
-
-    - name: "Create code/repos directory"
+    - name: 'Create code/repos directory'
       ansible.builtin.file:
-        path: /home/{{ the_user }}/code/repos
+        path: /home/{{ user }}/code/repos
         state: directory
         mode: 0755
+      tags: 'coderepo'
 
     - name: 'Install oh-my-zsh'
       ansible.builtin.include_tasks:
         file: 'tasks/ohmyzsh.yml'
+      tags: 'ohmyzsh'
 
     - name: 'Install oh-my-tmux'
       ansible.builtin.include_tasks:
         file: 'tasks/ohmytmux.yml'
-
-    - name: 'Install .aliases and .zsh_functions'
-      ansible.builtin.include_tasks:
-        file: 'tasks/addfiles.yml'
+      tags: 'ohmytmux'
 
     - name: 'Install rbenv'
       ansible.builtin.include_tasks:
         file: 'tasks/rbenv.yml'
+      tags: 'rbenv'
 
     - name: 'Install nvm'
       ansible.builtin.include_tasks:
         file: 'tasks/nvm.yml'
+      tags: 'nvm'
 
     - name: Add lne to .zshrc enable vi navigation in zsh
       ansible.builtin.lineinfile:
-        path: /home/{{ the_user }}/.zshrc
-        line: "bindkey -v"
+        path: /home/{{ user }}/.zshrc
+        line: 'bindkey -v'
         create: yes
 
     - name: Install Neovim
       ansible.builtin.include_tasks:
         file: 'tasks/neovim.yml'
+      tags: 'neovim'
 
     - name: Installs additional tools
       ansible.builtin.include_tasks:
         file: 'tasks/additionaltools.yml'
+      tags: 'additionaltools'

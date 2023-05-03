@@ -15,6 +15,6 @@
 
 - name: "Create user .config directory"
   ansible.builtin.file:
-    path: /home/{{ the_user }}/.config
+    path: /home/{{ user }}/.config
     state: directory
     mode: 0755

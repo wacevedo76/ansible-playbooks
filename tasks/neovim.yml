@@ -13,26 +13,26 @@
 - name: Clone neovim
   ansible.builtin.git:
     repo: https://github.com/neovim/neovim.git
-    dest: /home/{{ the_user }}/code/repos/neovim
-    force: yes
+    dest: /home/{{ user }}/code/repos/neovim
+      # force: yes
     update: yes
 
 - name: Change working directory to neovim and run build
   ansible.builtin.command: make CMAKE_BUILD_TYPE=RelWithDebInfo
   args:
-    chdir: /home/{{ the_user }}/code/repos/neovim
-    creates: /home/{{ the_user }}/code/repos/neovim/build/api_metadata.mpack
+    chdir: /home/{{ user }}/code/repos/neovim
+    creates: /home/{{ user }}/code/repos/neovim/build/api_metadata.mpack
 
 - name: Change working directory to neovim and run build
   become: true
   ansible.builtin.command: make install
   args:
-    chdir: /home/{{ the_user }}/code/repos/neovim
+    chdir: /home/{{ user }}/code/repos/neovim
     creates: /usr/local/bin/nvim
 
 - name: Install neovim Packer
   ansible.builtin.git:
     repo: https://github.com/wbthomason/packer.nvim
-    dest: /home/{{ the_user }}/.local/share/nvim/site/pack/packer/start/packer.nvim
+    dest: /home/{{ user }}/.local/share/nvim/site/pack/packer/start/packer.nvim
   args:
     depth: 1

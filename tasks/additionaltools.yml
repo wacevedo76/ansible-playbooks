@@ -8,10 +8,10 @@
 
 - name: 'Modify .zshrc file to add support for tools installed by pip'
   ansible.builtin.lineinfile:
-    path: /home/{{ the_user }}/.zshrc
+    path: /home/{{ user }}/.zshrc
     regex: '^# export PATH='
     line: 'export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH'
-    owner: '{{ the_user }}'
-    group: '{{ the_user }}'
+    owner: '{{ user }}'
+    group: '{{ user }}'
     mode: 0644
 
