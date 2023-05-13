@@ -5,7 +5,7 @@
     line: '[[ -f "/home/{{ user }}/.aliases" ]] && source "/home/{{ user }}/.aliases"'
     create: yes
 
-- name: Add lne to .zshrc to source zsh functions
+- name: Add line to .zshrc to source zsh functions
   ansible.builtin.lineinfile:
     path: /home/{{ user }}/.zshrc
     line: '[[ -f "/home/{{ user }}/.zsh_functions" ]] && source "/home/{{ user }}/.zsh_functions"'
@@ -26,3 +26,11 @@
     owner: '{{ user }}'
     group: '{{ user }}'
     mode: 0744
+
+- name: Copy basic vimrc file
+  ansible.builtin.copy:
+    src: 'files/remote_vimrc'
+    dest: /home/{{ user }}/.vimrc
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    mode: 0644
