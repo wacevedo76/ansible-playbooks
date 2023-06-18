@@ -4,12 +4,12 @@
 - name: Set up workstation
   hosts: nodes
   vars:
-    user: 'ansible'
+    user: 'wacevedo'
 
   tasks:
     - name: Install base packages
       ansible.builtin.include_tasks:
-        file: 'tasks/basepackages.yml'
+        file: 'tasks/basepackages-{{ ansible_os_family }}.yml'
       tags: 'base'
 
     - name: 'Create code/repos directory'
@@ -39,7 +39,7 @@
         file: 'tasks/nvm.yml'
       tags: 'nvm'
 
-    - name: Add lne to .zshrc enable vi navigation in zsh
+    - name: Add line to .zshrc enable vi navigation in zsh
       ansible.builtin.lineinfile:
         path: /home/{{ user }}/.zshrc
         line: 'bindkey -v'
@@ -47,7 +47,7 @@
 
     - name: Install Neovim
       ansible.builtin.include_tasks:
-        file: 'tasks/neovim.yml'
+        file: 'tasks/neovim-{{ ansible_os_family }}.yml'
       tags: 'neovim'
 
     - name: Installs additional tools
