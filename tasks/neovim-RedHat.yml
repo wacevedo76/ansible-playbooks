@@ -1,15 +1,22 @@
 ---
-- name: Install Neovim Dependencies
+- name: Install Base Neovim Dependencies
   become: yes
   ansible.builtin.yum:
     name:
-      - ninja-build
       - cmake
       - gcc
       - make
       - unzip
       - gettext
       - curl
+      - dnf-plugins-core
+    state: latest
+
+- name: Enable Powertools and install ninja-build
+  become: yes
+  ansible.builtin.dnf:
+    name: ninja-build
+    enablerepo: powertools
     state: latest
 
 - name: Clone neovim
