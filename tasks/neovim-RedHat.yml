@@ -1,21 +1,15 @@
 ---
-- name: Install Base Neovim Dependencies
+- name: Install Neovim Dependencies
   become: yes
   ansible.builtin.yum:
     name:
+      - ninja-build
       - cmake
       - gcc
       - make
       - unzip
       - gettext
       - curl
-      - dnf-plugins-core
-    state: latest
-
-- name: Enable Powertools and install ninja-build
-  become: yes
-  ansible.builtin.dnf:
-    name: ninja-build
     enablerepo: powertools
     state: latest
 
@@ -32,7 +26,7 @@
     chdir: /home/{{ user }}/code/repos/neovim
     creates: /home/{{ user }}/code/repos/neovim/build/api_metadata.mpack
 
-- name: Change working directory to neovim and run build
+- name: Build Neovim
   become: true
   ansible.builtin.command: make install
   args:

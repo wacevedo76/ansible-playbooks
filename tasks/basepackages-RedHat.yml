@@ -11,6 +11,8 @@
       - tmux
       - net-tools
       - openssl
+      - python3
+      - dnf-plugins-core
     state: latest
 
 - name: "Create user .config directory"

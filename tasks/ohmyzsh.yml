@@ -6,7 +6,7 @@
     shell: /bin/zsh
 
 - name: install oh-my-zsh
-  ansible.builtin.shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  ansible.builtin.shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
   args:
     creates: /home/{{ user }}/.zshrc
 

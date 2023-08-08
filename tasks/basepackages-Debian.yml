@@ -11,6 +11,7 @@
       - tmux
       - net-tools
       - libssl-dev
+      - python
     state: latest
 
 - name: "Create user .config directory"
